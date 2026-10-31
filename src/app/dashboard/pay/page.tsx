@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Lock } from "lucide-react";
 import { Badge, Card, PageHeader, Select, Table, Td } from "@/components/ui";
+import { FilterBar } from "@/components/ui";
 import { getDrivers, getPayStatements } from "@/services";
 import { calcStatement } from "@/lib/pay";
 import { money } from "@/lib/utils";
@@ -11,10 +12,10 @@ export default async function PayPage() {
     <>
       <PageHeader title="Driver Pay" subtitle="Weekly pay statements. Approved weeks are locked." />
       <Card>
-        <div className="grid gap-3 border-b border-slate-100 p-4 sm:grid-cols-3">
+        <FilterBar>
           <Select><option>All weeks</option><option>Oct 26 – Nov 1, 2026</option><option>Oct 19 – Oct 25, 2026</option></Select>
           <Select><option>All drivers</option>{drivers.map((d) => <option key={d.id}>{d.name}</option>)}</Select>
-        </div>
+        </FilterBar>
         <Table heads={["Week", "Driver", "Loads", "Loaded miles", "Empty miles", "Total pay", "Status"]}>
           {statements.map((s) => {
             const d = drivers.find((x) => x.id === s.driverId)!;

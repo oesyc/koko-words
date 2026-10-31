@@ -1,5 +1,7 @@
 // PHASE 1: mock data. PHASE 2: har function ke andar MySQL/API call lagayen, screens ko haath nahi lagana.
+import { cookies } from "next/headers";
 import * as db from "@/lib/mock-data";
+import { DRIVER_COOKIE, ROLE_COOKIE, parseRole } from "@/lib/roles";
 
 export const getLoads = async () => db.loads;
 export const getLoad = async (id: string) => db.loads.find((x) => x.id === id);
@@ -19,6 +21,7 @@ export const getQuote = async (id: string) => db.quotes.find((x) => x.id === id)
 export const getApplications = async () => db.applications;
 export const getApplication = async (id: string) => db.applications.find((x) => x.id === id);
 export const getUsers = async () => db.users;
-export const getCurrentDriverId = async () => db.CURRENT_DRIVER_ID;
+export const getCurrentDriverId = async () => (await cookies()).get(DRIVER_COOKIE)?.value || db.CURRENT_DRIVER_ID;
+export const getCurrentRole = async () => parseRole((await cookies()).get(ROLE_COOKIE)?.value);
 export const getMonthlyFinance = async () => db.monthlyFinance;
 export const getDriverPerformance = async () => db.driverPerformance;

@@ -1,8 +1,9 @@
+import { brokers } from "@/lib/mock-data";
 import Link from "next/link";
 import { Package, Users, Receipt, DollarSign, ChevronRight, UploadCloud, FileText, AlertTriangle, Clock, FileWarning } from "lucide-react";
 import { Badge, Card, CardHeader, PageHeader, Select, StatCard, Table, Td, btn } from "@/components/ui";
 import RevenueChart from "@/components/dashboard/RevenueChart";
-import { getAlerts, getDrivers, getInvoices, getLoads, getMonthlyFinance, getVehicles } from "@/services";
+import { getAlerts, getCurrentRole, getDrivers, getInvoices, getLoads, getMonthlyFinance, getVehicles } from "@/services";
 import { TODAY, etaLabel, expiryTone, fmtDate, money } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +12,8 @@ const avatarCls = ["bg-navy-100 text-navy", "bg-accent-50 text-accent-dark", "bg
 const reportLinks = [["Load summary", "load-summary"], ["Revenue and expenses", "revenue"], ["Driver performance", "performance"], ["Customer and broker statements", "statements"], ["Weekly driver pay", "weekly-pay"]];
 
 export default async function DashboardPage() {
+  const role = await getCurrentRole();
+  const isAdmin = role === "Admin";
   const [loads, drivers, invoices, alerts, finance, vehicles] = await Promise.all([getLoads(), getDrivers(), getInvoices(), getAlerts(), getMonthlyFinance(), getVehicles()]);
   const active = loads.filter((l) => l.status !== "Delivered");
   const deliveringToday = loads.filter((l) => l.delivery.date === TODAY && l.status !== "Delivered").length;
@@ -26,18 +29,18 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Fleet overview" subtitle="Loads, drivers, invoices and documents in one place."
+      <PageHeader title="Fleet overview" subtitle={isAdmin ? "Loads, drivers, invoices and documents in one place." : "Dispatcher view: loads, documents and invoices."}
         action={<><Select className="!w-40"><option>Last 30 days</option><option>Last 7 days</option><option>This month</option><option>This year</option></Select><Link href="/dashboard/loads/new" className={btn("accent")}>+ New load</Link></>} />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className={cn("grid gap-4 sm:grid-cols-2", isAdmin ? "xl:grid-cols-4" : "xl:grid-cols-3")}>
         <StatCard label="Active loads" value={active.length} hint={`${deliveringToday} delivering today`} icon={<Package />} />
         <StatCard label="Drivers on duty" value={`${onDuty} / ${drivers.length}`} hint={`${drivers.length - onDuty} off duty`} icon={<Users />} />
-        <StatCard label="Revenue this month" value={money(thisMonth.revenue)} hint={`${growth >= 0 ? "Up" : "Down"} ${Math.abs(growth)}% on last month`} icon={<DollarSign />} />
+        {isAdmin && <StatCard label="Revenue this month" value={money(thisMonth.revenue)} hint={`${growth >= 0 ? "Up" : "Down"} ${Math.abs(growth)}% on last month`} icon={<DollarSign />} />}
         <StatCard label="Unpaid invoices" value={money(unpaidTotal)} hint={`${overdue} overdue`} icon={<Receipt />} accent />
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-3">
-        <Card className="xl:col-span-2">
+        <Card className={isAdmin ? "xl:col-span-2" : "xl:col-span-3"}>
           <CardHeader title="Load tracking" action={<Link href="/dashboard/loads" className="text-sm font-semibold text-accent">View all</Link>} />
           <Table heads={["Load", "Route", "Driver", "Status", "ETA"]}>
             {loads.slice(0, 5).map((l) => (
@@ -51,14 +54,14 @@ export default async function DashboardPage() {
             ))}
           </Table>
         </Card>
-        <Card>
+        {isAdmin && <Card>
           <CardHeader title="Revenue and expenses" action={<span className="text-xs text-slate-400">Last 6 months</span>} />
           <div className="p-5"><RevenueChart data={finance} /></div>
-        </Card>
+        </Card>}
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <Card>
+      <div className={cn("mt-6 grid gap-6", isAdmin && "lg:grid-cols-2")}>
+        {isAdmin && <Card>
           <CardHeader title="Driver management" action={<Link href="/dashboard/drivers" className="text-sm font-semibold text-navy">View all</Link>} />
           <ul className="divide-y divide-slate-100">
             {drivers.map((d, i) => (
@@ -71,7 +74,7 @@ export default async function DashboardPage() {
               </li>
             ))}
           </ul>
-        </Card>
+        </Card>}
         <Card>
           <CardHeader title="Invoices" action={<Link href="/dashboard/invoices" className="text-sm font-semibold text-navy">Create invoice</Link>} />
           <ul className="divide-y divide-slate-100">
@@ -87,7 +90,7 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+      <div className={cn("mt-6 grid gap-6", isAdmin ? "lg:grid-cols-3" : "lg:grid-cols-2")}>
         <Card>
           <CardHeader title="Load documents" action={<Link href="/dashboard/documents" className="text-sm font-semibold text-navy">Open</Link>} />
           <div className="space-y-3 p-5">
@@ -115,7 +118,7 @@ export default async function DashboardPage() {
             {missingBol.length > 0 && <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-800"><FileWarning size={18} /><div><p className="text-sm font-semibold">{missingBol.length} delivered load(s) missing signed BOL</p><p className="text-xs opacity-80">Paperwork not complete</p></div></div>}
           </div>
         </Card>
-        <Card>
+        {isAdmin && <Card>
           <CardHeader title="Reports" />
           <p className="px-5 pt-3 text-xs text-slate-500">Filter by date, driver or customer</p>
           <div className="space-y-2 p-4">
@@ -123,12 +126,11 @@ export default async function DashboardPage() {
               <Link key={id} href={`/dashboard/reports#${id}`} className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-800 hover:border-accent hover:bg-accent-50">{label}<ChevronRight size={16} className="text-slate-400" /></Link>
             ))}
           </div>
-        </Card>
+        </Card>}
       </div>
     </>
   );
 }
 
 // helper (sync, mock). Phase 2 mein broker name API/DB se join hoga.
-import { brokers } from "@/lib/mock-data";
 function getBrokerName(id: string) { return brokers.find((b) => b.id === id)?.name; }

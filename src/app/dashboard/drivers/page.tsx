@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge, Card, Input, PageHeader, Select, Table, Td, btn } from "@/components/ui";
+import { FilterBar } from "@/components/ui";
 import { getDrivers, getVehicles } from "@/services";
 import { expiryTone, fmtDate, money } from "@/lib/utils";
 
@@ -9,7 +10,7 @@ export default async function DriversPage() {
     <>
       <PageHeader title="Drivers" subtitle="Profiles, documents and pay rates." action={<Link href="/dashboard/drivers/new" className={btn("accent")}>+ Add driver</Link>} />
       <Card>
-        <div className="grid gap-3 border-b border-slate-100 p-4 sm:grid-cols-3"><Input placeholder="Search drivers..." /><Select><option>All statuses</option><option>On duty</option><option>Off duty</option><option>Inactive</option></Select></div>
+        <FilterBar><Input placeholder="Search drivers..." /><Select><option>All statuses</option><option>On duty</option><option>Off duty</option><option>Inactive</option></Select></FilterBar>
         <Table heads={["Driver", "Phone", "Truck", "CDL expiry", "Medical expiry", "Loaded / Empty rate", "Status"]}>
           {drivers.map((d) => (
             <tr key={d.id} className="hover:bg-slate-50">

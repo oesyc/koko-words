@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge, Card, Field, Input, PageHeader, Select, Table, Td } from "@/components/ui";
+import { FilterBar } from "@/components/ui";
 import ModalButton from "@/components/ui/ModalButton";
 import { getBrokers, getInvoices, getLoads } from "@/services";
 import { fmtDate, money } from "@/lib/utils";
@@ -15,7 +16,7 @@ export default async function InvoicesPage() {
             <Field label="Extra charges (optional)"><Input placeholder="e.g. Detention $75" /></Field>
           </ModalButton>} />
       <Card>
-        <div className="grid gap-3 border-b border-slate-100 p-4 sm:grid-cols-3"><Input placeholder="Search invoice or load #..." /><Select><option>All statuses</option><option>Draft</option><option>Sent</option><option>Paid</option><option>Overdue</option></Select></div>
+        <FilterBar><Input placeholder="Search invoice or load #..." /><Select><option>All statuses</option><option>Draft</option><option>Sent</option><option>Paid</option><option>Overdue</option></Select></FilterBar>
         <Table heads={["Invoice #", "Load #", "Broker", "Issued", "Due", "Amount", "Status"]}>
           {invoices.map((i) => (
             <tr key={i.id} className="hover:bg-slate-50">

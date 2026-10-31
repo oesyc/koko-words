@@ -1,6 +1,7 @@
 import { Badge, Card, Field, Input, PageHeader, Select, Table, Td, btn } from "@/components/ui";
 import ModalButton from "@/components/ui/ModalButton";
 import { getUsers } from "@/services";
+import AccessMatrix from "@/components/dashboard/AccessMatrix";
 
 const roles = [
   { name: "Admin", text: "Everything: users, loads, drivers, pay, invoices, reports and settings." },
@@ -31,6 +32,7 @@ export default async function UsersPage() {
           ))}
         </Table>
       </Card>
+      <div className="mt-6"><AccessMatrix /></div>
     </>
   );
 }

@@ -4,7 +4,7 @@ export type Role = "Admin" | "Dispatcher" | "Driver";
 
 export interface Broker { id: string; name: string; contact: string; phone: string; billingEmail: string; paymentTerms: string }
 export interface Driver {
-  id: string; name: string; phone: string; email: string; truckId: string; cdlNumber: string;
+  id: string; name: string; phone: string; email: string; truckId: string; trailerId?: string; cdlNumber: string;
   cdlExpiry: string; medicalExpiry: string; loadedRate: number; emptyRate: number; status: "On duty" | "Off duty" | "Inactive";
 }
 export interface Vehicle {

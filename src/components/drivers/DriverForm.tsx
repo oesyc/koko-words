@@ -11,7 +11,8 @@ export default function DriverForm({ driver, vehicles }: { driver?: Driver; vehi
           <Field label="Full name"><Input defaultValue={driver?.name} /></Field>
           <Field label="Phone"><Input defaultValue={driver?.phone} /></Field>
           <Field label="Email (login)"><Input type="email" defaultValue={driver?.email} /></Field>
-          <Field label="Assigned truck"><Select defaultValue={driver?.truckId}>{vehicles.filter((v) => v.type === "Truck").map((v) => <option key={v.id} value={v.id}>{v.unit} – {v.plate}</option>)}</Select></Field>
+          <Field label="Assigned truck"><Select defaultValue={driver?.truckId ?? ""}><option value="">No truck</option>{vehicles.filter((v) => v.type === "Truck").map((v) => <option key={v.id} value={v.id}>{v.unit} – {v.plate}</option>)}</Select></Field>
+          <Field label="Assigned trailer"><Select defaultValue={driver?.trailerId ?? ""}><option value="">No trailer</option>{vehicles.filter((v) => v.type === "Trailer").map((v) => <option key={v.id} value={v.id}>{v.unit} – {v.plate}</option>)}</Select></Field>
           <Field label="Status"><Select defaultValue={driver?.status ?? "On duty"}><option>On duty</option><option>Off duty</option><option>Inactive</option></Select></Field>
         </div>
       </Card>

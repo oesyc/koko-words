@@ -10,8 +10,8 @@ export const brokers: T.Broker[] = [
 ];
 
 export const drivers: T.Driver[] = [
-  { id: "d1", name: "Marcus Johnson", phone: "(832) 555-0141", email: "marcus@kokosworldllc.com", truckId: "v1", cdlNumber: "TX-48291037", cdlExpiry: "2027-06-14", medicalExpiry: "2026-11-20", loadedRate: 0.62, emptyRate: 0.45, status: "On duty" },
-  { id: "d2", name: "Carlos Rivera", phone: "(713) 555-0178", email: "carlos@kokosworldllc.com", truckId: "v2", cdlNumber: "TX-55120984", cdlExpiry: "2028-02-09", medicalExpiry: "2027-03-30", loadedRate: 0.6, emptyRate: 0.6, status: "On duty" },
+  { id: "d1", name: "Marcus Johnson", phone: "(832) 555-0141", email: "marcus@kokosworldllc.com", truckId: "v1", trailerId: "v4", cdlNumber: "TX-48291037", cdlExpiry: "2027-06-14", medicalExpiry: "2026-11-20", loadedRate: 0.62, emptyRate: 0.45, status: "On duty" },
+  { id: "d2", name: "Carlos Rivera", phone: "(713) 555-0178", email: "carlos@kokosworldllc.com", truckId: "v2", trailerId: "v5", cdlNumber: "TX-55120984", cdlExpiry: "2028-02-09", medicalExpiry: "2027-03-30", loadedRate: 0.6, emptyRate: 0.6, status: "On duty" },
   { id: "d3", name: "David Miller", phone: "(281) 555-0123", email: "david@kokosworldllc.com", truckId: "v3", cdlNumber: "TX-39874421", cdlExpiry: "2026-11-05", medicalExpiry: "2027-08-01", loadedRate: 0.58, emptyRate: 0.4, status: "Off duty" },
 ];
 

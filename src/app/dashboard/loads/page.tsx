@@ -11,7 +11,7 @@ export default async function LoadsPage() {
       <PageHeader title="Loads" subtitle="Track every load from booking to delivery." action={<Link href="/dashboard/loads/new" className={btn("accent")}>+ New Load</Link>} />
       <Card>
         <FilterBar>
-          <Input placeholder="Search load #..." />
+          <Input className="lg:col-span-2" placeholder="Search load #, city, broker or driver..." />
           <Select><option>All drivers</option>{drivers.map((d) => <option key={d.id}>{d.name}</option>)}</Select>
           <Select><option>All brokers</option>{brokers.map((b) => <option key={b.id}>{b.name}</option>)}</Select>
           <Select><option>All statuses</option>{statuses.map((s) => <option key={s}>{s}</option>)}</Select>

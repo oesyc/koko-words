@@ -37,7 +37,9 @@ export default async function DriverStatementPage({ params }: { params: Promise<
         {s.extras.map((e) => <InfoRow key={e.label} label={e.label} value={"+ " + money(e.amount)} />)}
         {s.deductions.map((e) => <InfoRow key={e.label} label={e.label} value={"− " + money(e.amount)} />)}
       </Card>
-      <button className={btn("outline") + " w-full"}><FileDown size={16} /> Download PDF</button>
+      {s.status === "Approved" ? (
+        <div className="grid grid-cols-2 gap-2"><button className={btn("primary")}><FileDown size={16} /> Download PDF</button><button className={btn("outline")}>Email me a copy</button></div>
+      ) : <p className="text-center text-xs text-slate-500">PDF will be available once the office approves this week.</p>}
     </>
   );
 }

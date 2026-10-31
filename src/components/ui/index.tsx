@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import { ReactNode, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +39,7 @@ const tones: Record<string, string> = {
   New: "bg-accent-50 text-accent-dark", Contacted: "bg-navy-100 text-navy", Quoted: "bg-green-100 text-green-800",
   Reviewing: "bg-amber-100 text-amber-800", Hired: "bg-green-100 text-green-800", Rejected: "bg-red-100 text-red-700",
   Admin: "bg-navy text-white", Dispatcher: "bg-accent-50 text-accent-dark", Driver: "bg-slate-100 text-slate-700",
-  Yes: "bg-green-100 text-green-800", No: "bg-red-100 text-red-700",
+  Yes: "bg-green-100 text-green-800", Received: "bg-green-100 text-green-800", Available: "bg-navy-100 text-navy", "Needs re-upload": "bg-red-100 text-red-700", Assigned: "bg-navy-100 text-navy", Unassigned: "bg-slate-100 text-slate-600", No: "bg-red-100 text-red-700",
 };
 export function Badge({ children }: { children: string }) {
   return <span className={cn("inline-block whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold", tones[children] ?? "bg-slate-100 text-slate-700")}>{children}</span>;
@@ -109,5 +110,13 @@ export function InfoRow({ label, value }: { label: string; value: ReactNode }) {
   );
 }
 export function FilterBar({ children }: { children: ReactNode }) {
-  return <div className="grid gap-3 border-b border-slate-100 p-4 sm:grid-cols-2 lg:grid-cols-5">{children}</div>;
+  return (
+    <div className="grid gap-3 border-b border-slate-100 p-4 sm:grid-cols-2 lg:grid-cols-6">
+      {children}
+      <div className="flex justify-end gap-2 sm:col-span-2 lg:col-span-6">
+        <button type="button" className={btn("outline")}>Reset</button>
+        <button type="button" className={btn("accent")}><Search size={16} /> Search</button>
+      </div>
+    </div>
+  );
 }

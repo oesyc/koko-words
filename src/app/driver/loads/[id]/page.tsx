@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Camera, ChevronLeft, MapPin, CheckCircle2 } from "lucide-react";
-import { Badge, Card, Field, InfoRow, Select, Textarea, btn } from "@/components/ui";
+import { ChevronLeft, MapPin } from "lucide-react";
+import { Badge, Card, Field, InfoRow, Select, Textarea } from "@/components/ui";
 import ModalButton from "@/components/ui/ModalButton";
 import { getBroker, getLoad } from "@/services";
+import DriverUploadCard from "@/components/loads/DriverUploadCard";
 import { fmtDate } from "@/lib/utils";
 
 export default async function DriverLoadPage({ params }: { params: Promise<{ id: string }> }) {
@@ -11,6 +12,11 @@ export default async function DriverLoadPage({ params }: { params: Promise<{ id:
   const l = await getLoad(id);
   if (!l) notFound();
   const broker = await getBroker(l.brokerId);
+  const existing = [
+    ...(l.hasRateCon ? [{ name: `RateConfirmation_${l.loadNumber}.pdf`, type: "Rate confirmation (from office)", status: "Available" }] : []),
+    ...(l.hasBol ? [{ name: `BOL_${l.loadNumber}_signed.pdf`, type: "Signed BOL", status: "Received" }] : []),
+    ...(l.id === "l6" ? [{ name: "FuelReceipt_blurry.jpg", type: "Fuel receipt", status: "Needs re-upload" }] : []),
+  ];
   const statuses = ["At pickup", "Loaded", "In transit", "Delivered", "Delayed", "Other"];
 
   return (
@@ -36,14 +42,7 @@ export default async function DriverLoadPage({ params }: { params: Promise<{ id:
         </ModalButton>
       </div>
 
-      <Card className="p-4">
-        <h2 className="mb-3 font-semibold">Bill of Lading (BOL)</h2>
-        {l.hasBol ? (
-          <p className="flex items-center gap-2 text-sm text-green-700"><CheckCircle2 size={18} /> Signed BOL uploaded</p>
-        ) : (
-          <label className={btn("primary") + " w-full cursor-pointer py-3"}><Camera size={20} /> Take / upload BOL photo<input type="file" accept="image/*" capture="environment" className="hidden" /></label>
-        )}
-      </Card>
+      <DriverUploadCard loadNumber={l.loadNumber} existing={existing} />
     </>
   );
 }
